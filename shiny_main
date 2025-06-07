@@ -115,7 +115,7 @@ server <- function(input, output, session) {
   })
   
   
-  output$table <- renderDataTable({
+  output$project_list <- renderDataTable({
     filtered_data()
   })
   
@@ -136,13 +136,6 @@ server <- function(input, output, session) {
       addProviderTiles(providers$CartoDB.Positron) %>%
       setView(lng = -98.5795, lat = 39.8283, zoom = 4)
   })
-  
-  output$project_list <- renderDT({
-    data <- filtered_data()
-    data[, c("Representative", "Developer", "City", "State", "Project Type", "Announced Jobs", "Announced Investment")]
-  })
-  
-  
   
 }
 

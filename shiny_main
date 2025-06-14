@@ -113,6 +113,20 @@ server <- function(input, output, session) {
     datatable(dt_projects)
   })
   
+  output$summary_table <- renderDataTable({
+    data <- filtered_data()
+    
+    summary_df <- data.frame(
+      Metric = c("Announced Projects", "Announced Investment", "Announced Jobs"),
+      Value = c(
+        nrow(data),
+        paste0("$", formatC(sum(data$`Announced Investment`, na.rm = TRUE), format = "f", big.mark = ",", digits = 0)),
+        paste0("$", formatC(sum(data$`Announced Jobs`, na.rm = TRUE), format = "f", big.mark = ",", digits = 0))
+      )
+    )
+    
+    datatable(summary_df, rownames = FALSE, options = list(dom = 't'))
+  })
   
   output$map <- renderLeaflet({
     leaflet(options = leafletOptions(

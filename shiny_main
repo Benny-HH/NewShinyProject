@@ -153,6 +153,23 @@ server <- function(input, output, session) {
       addProviderTiles(providers$CartoDB.Positron) %>%
       setView(lng = -98.5795, lat = 39.8283, zoom = 4)
   })
+
+  observe({
+    data <- filtered_data_map()
+    
+    leafletProxy("map", data = data) %>%
+      clearMarkers() %>%
+      addCircleMarkers(
+        lng = ~Longitude,
+        lat = ~Latitude,
+        radius = 6,
+        color = "#2A81CB",
+        stroke = TRUE,
+        weight = 3,
+        fill = FALSE,
+        fillOpacity = 0
+      )
+  })
   
 }
 

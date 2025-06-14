@@ -39,9 +39,7 @@ ui <- fluidPage(
     
     column(
       width = 8,
-      leafletOutput("map", height = 500),
-      br(),
-      DTOutput("table")
+      leafletOutput("map", height = 500)
     ),
     
     column(

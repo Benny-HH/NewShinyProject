@@ -11,8 +11,10 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(DT)
 library(vroom)
+library(shinyWidgets)
 
-dt <- vroom("~/Documents/New Shiny Project/Map_data.csv", locale = locale(encoding = "UTF-16"))
+
+dt <- vroom("Map_data.csv", locale = locale(encoding = "UTF-16"))
 dt$`Date Announced (MM/DD/YYYY)1` <- as.Date(dt$`Date Announced (MM/DD/YYYY)1`, format = "%m/%d/%Y")
 min_date <- min(dt$`Date Announced (MM/DD/YYYY)1`, na.rm = TRUE)
 max_date <- max(dt$`Date Announced (MM/DD/YYYY)1`, na.rm = TRUE)

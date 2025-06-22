@@ -123,7 +123,7 @@ server <- function(input, output, session) {
       Value = c(
         nrow(data),
         paste0("$", formatC(sum(data$`Announced Investment`, na.rm = TRUE), format = "f", big.mark = ",", digits = 0)),
-        paste0("$", formatC(sum(data$`Announced Jobs`, na.rm = TRUE), format = "f", big.mark = ",", digits = 0))
+        paste0(formatC(sum(data$`Announced Jobs`, na.rm = TRUE), format = "f", big.mark = ",", digits = 0))
       )
     )
     

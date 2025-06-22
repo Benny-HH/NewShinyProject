@@ -150,17 +150,27 @@ server <- function(input, output, session) {
   observe({
     data <- filtered_data()
     
+    size_attr <- if (input$attribute == "By Investment") {
+      data$`Announced Investment`
+    } else {
+      data$`Announced Jobs`
+    }
+    
+    size_attr[is.na(size_attr)] <- 0
+  
+    radius <- scales::rescale(size_attr, to = c(8, 35), na.rm = TRUE)
+    
     leafletProxy("map", data = data) %>%
       clearMarkers() %>%
       addCircleMarkers(
         lng = ~Longitude,
         lat = ~Latitude,
-        radius = 6,
+        radius = radius,
         color = "#2A81CB",
         stroke = TRUE,
-        weight = 3,
-        fill = FALSE,
-        fillOpacity = 0
+        weight = 1.75,
+        fillOpacity = 0,
+        opacity = 1
       )
   })
   

@@ -147,6 +147,14 @@ server <- function(input, output, session) {
       setView(lng = -98.5795, lat = 39.8283, zoom = 4)
   })
 
+  observeEvent(input$reset_filters, {
+    updatePickerInput(session, "representative", selected = character(0))
+    updatePickerInput(session, "state", selected = character(0))
+    updatePickerInput(session, "project_type", selected = character(0))
+    updatePickerInput(session, "sector", selected = character(0))
+    updateSliderInput(session, "date_announced", value = c(min_date, max_date))
+  })
+
   observe({
     data <- filtered_data()
     
@@ -157,7 +165,6 @@ server <- function(input, output, session) {
     }
     
     size_attr[is.na(size_attr)] <- 0
-  
     radius <- scales::rescale(size_attr, to = c(8, 35), na.rm = TRUE)
     
     leafletProxy("map", data = data) %>%

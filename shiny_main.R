@@ -34,7 +34,7 @@ ui <- fluidPage(
     column(
       width = 2,
       wellPanel(
-        pickerInput("map_view", "Map View", choices = c("Sector", "Disadvantaged Communities", "Energy Communities", "Congressional Districts"), multiple = FALSE),
+        pickerInput("map_view", "Map View", choices = c("Sector", "Disadvantaged Communities", "Congressional Districts"), multiple = FALSE),
         pickerInput("attribute", "Project Size by Attribute", choices = c("By Investment", "By Job"), multiple = FALSE),
         pickerInput("show_hide", "Show/Hide Project Type", choices = c("Show", "Hide"), multiple = FALSE)
       )
@@ -180,6 +180,55 @@ server <- function(input, output, session) {
         fillOpacity = 0,
         opacity = 1
       )
+  })
+
+  output$pie_chart <- renderPlot({
+    data <- filtered_data()
+    
+    category_col <- switch(input$map_view,
+                           "Sector" = "Sector",
+                           "Disadvantaged Communities" = "Disadvantaged",
+                           "Congressional Districts" = "Rep Party"
+    )
+    
+    category_data <- data[[category_col]]
+    category_data[is.na(category_data) | category_data == ""] <- "Unknown"
+    
+    pie_data <- as.data.frame(table(category_data))
+    names(pie_data) <- c("Category", "Count")
+    pie_data$Percent <- round(pie_data$Count / sum(pie_data$Count) * 100, 1)
+    
+    pie_labels <- paste0(pie_data$Category, " (", pie_data$Percent, "%)")
+    
+    pie_colors <- if (input$map_view == "Congressional Districts") {
+      sapply(pie_data$Category, function(x) {
+        if (x == "Democrat") "blue"
+        else if (x == "Republican") "red"
+        else if (x == "TBD") "gray"
+        else if (x == "Vacant") "black"
+        else "white"
+      })
+    } else if (input$map_view == "Disadvantaged Communities") {
+      sapply(pie_data$Category, function(x) {
+        if (x == "Yes") "lightblue"
+        else if (x == "No") "black"
+        else if (x == "Location TBD") "gray"
+        else "white"
+      })
+    } else if (input$map_view == "Sector") {
+      sapply(pie_data$Category, function(x) {
+        if (x == "Battery/Storage") "darkblue"
+        else if (x == "Clean Vehicles") "skyblue"
+        else if (x == "Grid/Electrification") "darkorange"
+        else if (x == "Solar") "tan"
+        else if (x == "Wind") "darkgreen"
+        else if (x == "Other") "gray"
+        else "white"
+      })
+    }
+    
+    pie(pie_data$Count, labels = pie_labels, col = pie_colors,
+        main = paste("Distribution by", input$map_view))
   })
   
 }

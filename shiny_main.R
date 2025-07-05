@@ -84,20 +84,20 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   
-  filtered_data <- reactive({
+  ffiltered_data <- reactive({
     data <- dt
-
-    if (!is.null(input$representative) && input$representative != "") {
-      data <- data[data$Representative == input$representative, ]
+    
+    if (!is.null(input$representative) && length(input$representative) > 0) {
+      data <- data[data$Representative %in% input$representative, ]
     }
-    if (!is.null(input$state) && input$state != "") {
-      data <- data[data$State == input$state, ]
+    if (!is.null(input$state) && length(input$state) > 0) {
+      data <- data[data$State %in% input$state, ]
     }
-    if (!is.null(input$project_type) && input$project_type != "") {
-      data <- data[data$`Project Type` == input$project_type, ]
+    if (!is.null(input$project_type) && length(input$project_type) > 0) {
+      data <- data[data$`Project Type` %in% input$project_type, ]
     }
-    if (!is.null(input$sector) && input$sector != "") {
-      data <- data[data$Sector == input$sector, ]
+    if (!is.null(input$sector) && length(input$sector) > 0) {
+      data <- data[data$Sector %in% input$sector, ]
     }
     if (!is.null(input$date_announced)) {
       data <- data[
@@ -105,7 +105,7 @@ server <- function(input, output, session) {
           data$`Date Announced (MM/DD/YYYY)1` <= input$date_announced[2], 
       ]
     }
-  
+    
     return(data)
   })
   

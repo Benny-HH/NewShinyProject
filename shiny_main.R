@@ -180,8 +180,8 @@ server <- function(input, output, session) {
     
     colors <- if (input$map_view == "Congressional Districts") {
       case_when(
-        color_data == "Democrat" ~ "blue",
-        color_data == "Republican" ~ "red",
+        color_data == "Democrat" ~ "#00008B",
+        color_data == "Republican" ~ "#B22222",
         color_data == "TBD" ~ "gray",
         color_data == "Vacant" ~ "black",
         TRUE ~ "white"
@@ -242,8 +242,8 @@ server <- function(input, output, session) {
     
     pie_colors <- if (input$map_view == "Congressional Districts") {
       sapply(pie_data$Category, function(x) {
-        if (x == "Democrat") "blue"
-        else if (x == "Republican") "red"
+        if (x == "Democrat") "#00008B"
+        else if (x == "Republican") "#B22222"
         else if (x == "TBD") "gray"
         else if (x == "Vacant") "black"
         else "white"

@@ -168,15 +168,55 @@ server <- function(input, output, session) {
     size_attr[is.na(size_attr)] <- 0
     radius <- scales::rescale(size_attr, to = c(8, 35), na.rm = TRUE)
     
+    color_data <- if (input$map_view == "Congressional Districts") {
+      data$`Rep Party`
+    } else if (input$map_view == "Disadvantaged Communities") {
+      data$Disadvantaged
+    } else if (input$map_view == "Sector") {
+      data$Sector
+    } else {
+      rep("#2A81CB", nrow(data))
+    }
+    
+    colors <- if (input$map_view == "Congressional Districts") {
+      case_when(
+        color_data == "Democrat" ~ "blue",
+        color_data == "Republican" ~ "red",
+        color_data == "TBD" ~ "gray",
+        color_data == "Vacant" ~ "black",
+        TRUE ~ "white"
+      )
+    } else if (input$map_view == "Disadvantaged Communities") {
+      case_when(
+        color_data == "Yes" ~ "lightblue",
+        color_data == "No" ~ "black",
+        color_data == "Location TBD" ~ "gray",
+        TRUE ~ "white"
+      )
+    } else if (input$map_view == "Sector") {
+      case_when(
+        color_data == "Battery/Storage" ~ "darkblue",
+        color_data == "Clean Vehicles" ~ "skyblue",
+        color_data == "Grid/Electrification" ~ "darkorange",
+        color_data == "Solar" ~ "tan",
+        color_data == "Wind" ~ "darkgreen",
+        color_data == "Other" ~ "gray",
+        TRUE ~ "white"
+      )
+    } else {
+      rep("#2A81CB", nrow(data))
+    }
+    
     leafletProxy("map", data = data) %>%
       clearMarkers() %>%
       addCircleMarkers(
         lng = ~Longitude,
         lat = ~Latitude,
         radius = radius,
-        color = "#2A81CB",
+        color = colors,
         stroke = TRUE,
         weight = 1.75,
+        fillColor = colors,
         fillOpacity = 0,
         opacity = 1
       )

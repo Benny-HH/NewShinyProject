@@ -279,8 +279,15 @@ server <- function(input, output, session) {
       })
     }
     
-    pie(pie_data$Count, labels = pie_labels, col = pie_colors,
+    par(mar = c(4, 2, 4, 2))
+
+    pie(pie_data$Count, labels = NA, col = pie_colors,
         main = paste("Distribution by", input$map_view))
+    
+    legend("topright",
+           legend = pie_labels,
+           fill = pie_colors,
+           cex = 0.8)
   })
   
 }

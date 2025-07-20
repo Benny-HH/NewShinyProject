@@ -206,7 +206,18 @@ server <- function(input, output, session) {
     } else {
       rep("#2A81CB", nrow(data))
     }
-    
+    label = lapply(paste0(
+      "<div style='font-family: monospace; white-space: pre; font-size: 11px; line-height: 1.2em; padding: 2px;'>",
+      "Location:          ", data$City, ", ", data$State, "<br/>",
+      "Developer:         ", data$Developer, "<br/>",
+      "Project Type:      ", data$`Project Type`, "<br/>",
+      "Date Announced:    ", format(data$`Date Announced (MM/DD/YYYY)1`, "%b %d, %Y"), "<br/>",
+      "Investment:        $", formatC(data$`Announced Investment`, format = "f", big.mark = ",", digits = 0), "<br/>",
+      "Jobs:              ", formatC(data$`Announced Jobs`, format = "f", big.mark = ",", digits = 0), "<br/>",
+      "Representative:    ", data$Representative, " (", data$`Rep Party`, ")",
+      "</div>"
+    ), FUN = HTML)
+
     leafletProxy("map", data = data) %>%
       clearMarkers() %>%
       addCircleMarkers(
@@ -218,7 +229,8 @@ server <- function(input, output, session) {
         weight = 1.75,
         fillColor = colors,
         fillOpacity = 0,
-        opacity = 1
+        opacity = 1,
+        label = label
       )
   })
 

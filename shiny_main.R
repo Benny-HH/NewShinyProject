@@ -113,7 +113,19 @@ server <- function(input, output, session) {
   
   output$project_list <- renderDataTable({
     dt_projects <- filtered_data()[, c("Representative", "Developer", "City", "Project Type", "Announced Jobs", "Announced Investment")]
-    datatable(dt_projects)
+    datatable(
+      dt_projects,
+      options = list(
+        pageLength = 10,
+        lengthMenu = c(5, 10, 25, 50, 100),
+        dom = 'lftpi'
+      )
+    ) %>%
+      formatStyle(
+        columns = names(dt_projects),
+        fontSize = '11px',
+        lineHeight = '90%'
+      )
   })
   
   output$summary_table <- renderDataTable({

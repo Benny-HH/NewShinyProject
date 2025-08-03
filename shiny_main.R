@@ -156,7 +156,7 @@ server <- function(input, output, session) {
       minZoom = 4,
       maxZoom = 8
     )) %>%
-      addProviderTiles(providers$CartoDB.Positron) %>%
+      addProviderTiles(providers$CartoDB.Voyager) %>%
       setView(lng = -98.5795, lat = 39.8283, zoom = 4)
   })
 

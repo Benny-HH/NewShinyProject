@@ -197,7 +197,7 @@ server <- function(input, output, session) {
     if (is.null(legend_items)) return(NULL)
     tagList(
       lapply(legend_items, function(item) {
-        tags$div(style = "display: flex; align-items: center; margin-bottom: 4px;",
+        tags$div(style = "display: flex; align-items: center; margin-bottom: 6px;",
                  tags$div(style = paste0("width: 15px; height: 15px; background-color:", item$color, "; margin-right: 8px; border: 1px solid #000;")),
                  tags$span(style = "font-size: 13px;", item$label)
         )

@@ -35,6 +35,7 @@ ui <- fluidPage(
       width = 2,
       wellPanel(
         pickerInput("map_view", "Map View", choices = c("Sector", "Disadvantaged Communities", "Congressional Districts"), multiple = FALSE),
+        uiOutput("map_legend"),
         pickerInput("attribute", "Project Size by Attribute", choices = c("By Investment", "By Job"), multiple = FALSE),
         pickerInput("show_hide", "Show/Hide Project Type", choices = c("Show", "Hide"), multiple = FALSE)
       )
@@ -166,6 +167,42 @@ server <- function(input, output, session) {
     updatePickerInput(session, "project_type", selected = character(0))
     updatePickerInput(session, "sector", selected = character(0))
     updateSliderInput(session, "date_announced", value = c(min_date, max_date))
+  })
+
+  output$map_legend <- renderUI({
+    map_view <- input$map_view
+    
+    legend_items <- switch(map_view,
+      "Congressional Districts" = list(
+        list(color = "#B22222", label = "Republican"),
+        list(color = "#00008B", label = "Democrat"),
+        list(color = "gray", label = "TBD"),
+        list(color = "black", label = "Vacant")
+      ),
+      "Disadvantaged Communities" = list(
+        list(color = "lightblue", label = "Yes"),
+        list(color = "black", label = "No"),
+        list(color = "gray", label = "Location TBD")
+      ),
+      "Sector" = list(
+        list(color = "darkblue", label = "Battery/Storage"),
+        list(color = "skyblue", label = "Clean Vehicles"),
+        list(color = "darkorange", label = "Grid/Electrification"),
+        list(color = "tan", label = "Solar"),
+        list(color = "darkgreen", label = "Wind"),
+        list(color = "gray", label = "Other")
+      ),
+      NULL
+    )
+    if (is.null(legend_items)) return(NULL)
+    tagList(
+      lapply(legend_items, function(item) {
+        tags$div(style = "display: flex; align-items: center; margin-bottom: 4px;",
+                 tags$div(style = paste0("width: 15px; height: 15px; background-color:", item$color, "; margin-right: 8px; border: 1px solid #000;")),
+                 tags$span(style = "font-size: 13px;", item$label)
+        )
+      })
+    )
   })
 
   observe({
